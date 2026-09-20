@@ -5,6 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - uses: actions/setup-java@v4
         with:
           java-version: '17'
@@ -18,5 +20,5 @@ jobs:
           ./gradlew :TMessagesProj:assembleAfatDebug
       - uses: actions/upload-artifact@v4
         with:
-          name: Teli-APK
-          path: TMessagesProj/build/outputs/apk/Afat/debug/*.apk
+         name: Teli-APK
+         path: TMessagesProj/build/outputs/apk/Afat/debug/*.apk
