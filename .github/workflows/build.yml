@@ -1,14 +1,16 @@
 name: Build Teli APK
 on:
-  push:
-    branches: [ master, main ]
   workflow_dispatch:
+  push:
+    branches: [ main, master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
     steps:
-      - name: 1. Checkout code
+      - name: 1. Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
@@ -24,21 +26,18 @@ jobs:
       - name: 3. Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: 4. Accept all licenses
-        run: yes | sdkmanager --licenses || true
+      - name: 4. Accept Licenses
+        run: yes | sdkmanager --licenses > /dev/null 2>&1 || true
 
-      - name: 5. Install SDK packages - بدون tools
+      - name: 5. Install SDK Packages
         run: |
-          sdkmanager --install "platform-tools"
-          sdkmanager --install "platforms;android-34" 
-          sdkmanager --install "build-tools;34.0.0"
-          sdkmanager --install "ndk;26.1.10909125"
-          sdkmanager --install "cmake;3.22.1"
+          sdkmanager --install "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+          sdkmanager --install "ndk;26.1.10909125" "cmake;3.22.1"
 
       - name: 6. Make gradlew executable
         run: chmod +x gradlew
 
-      - name: 7. Build Debug APK
+      - name: 7. Build APK
         run: ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: 8. Upload APK
@@ -46,3 +45,4 @@ jobs:
         with:
           name: Teli-APK
           path: TMessagesProj/build/outputs/apk/debug/TMessagesProj_debug.apk
+          retention-days: 5
