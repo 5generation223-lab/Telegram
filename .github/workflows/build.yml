@@ -13,7 +13,7 @@ jobs:
           distribution: 'temurin'
       - uses: nttld/setup-ndk@v1
         with:
-          ndk-version: r21e
+          ndk-version: r27.2.12479018e
       - name: Build APK
         run: |
           chmod +x gradlew
